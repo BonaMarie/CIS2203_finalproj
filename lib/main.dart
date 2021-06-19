@@ -1,108 +1,132 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert' as converter;
+import 'package:form_field_validator/form_field_validator.dart';
+import 'jokeApp.dart';
+
+
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        
-        primarySwatch: Colors.blue,
-        accentColor: Colors.white,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: JokePage(),
+      debugShowCheckedModeBanner: false,
+      home: LoginDemo(),
     );
   }
 }
 
-class JokePage extends StatefulWidget {
-  JokePage({Key key}) : super(key: key);
-
+class LoginDemo extends StatefulWidget {
   @override
-  _JokePageState createState() => _JokePageState();
+  _LoginDemoState createState() => _LoginDemoState();
 }
 
-class _JokePageState extends State<JokePage> {
-  String joke = 'Touch Screen!!';
-  Color color = Colors.blueAccent;
-  List<Color> colors = [Colors.redAccent, Colors.greenAccent, Colors.greenAccent, Colors.blueAccent, Colors.orangeAccent, Colors.deepOrange, Colors.deepPurple];
+class _LoginDemoState extends State<LoginDemo> {
+  GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
-  Future<dynamic> getJokes() async{
-    var url = 'https://official-joke-api.appspot.com/random_ten';
-    // await response from the url 
-    var response = await http.get(url);
-
-    if(response.statusCode == 200){
-        var jsonData = converter.jsonDecode(response.body);
-        return jsonData;
-    }
-    else return null;
+  String validatePassword(String value) {
+    if (value.isEmpty) {
+      return "* Required";
+    } else if (value.length < 8) {
+      return "Password should be atleast 8 characters";
+    } else
+      return null;
   }
-
-  randomJoke(List jokes){
-    var random = new Random();
-    int index = random.nextInt(jokes.length ?? 0);
-    int colorIndex = random.nextInt(colors.length);
-    setState(() {
-      color = colors[colorIndex];
-      joke = '${jokes[index]['setup']} \n ${jokes[index]['punchline']}';
-    });
-  }
-
-  
-
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: color,
-      appBar: null,
-      body: SafeArea(
-        child: FutureBuilder<dynamic>(
-          future: getJokes(),
-          builder: (context, snapshot) {
-            if(snapshot.connectionState == ConnectionState.done)
-              return Container(
-                height: MediaQuery.of(context).size.height,
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text("Bona's Login Page"),
+        backgroundColor: const Color(4281608744),
+      ),
+      body: SingleChildScrollView(
+        child: Form(
+          key: formkey,
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 60.0),
                 child: Center(
-                  child: (snapshot.data != null)?GestureDetector(
-                    onTap: ()=> randomJoke(snapshot.data),
-                    child: Text(joke ?? '', style: TextStyle(color: Colors.white, fontSize: 50), textAlign: TextAlign.center,)
-                  )
-                  : Text('No Jokes At This Time',  style: TextStyle(color: Colors.white, fontSize: 50), textAlign:  TextAlign.center,)
+                  child: Container(
+                      width: 200,
+                      height: 150,
+                      /*decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(50.0)),*/
+                      child: Image.asset('asset/images/logo.png')),
+                ),
+              ),
+              Padding(
+                //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: TextFormField(
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Email',
+                        hintText: 'Enter valid email id as abc@gmail.com'),
+                    validator: MultiValidator([
+                      RequiredValidator(errorText: "* Required"),
+                      EmailValidator(errorText: "Enter valid email id"),
+                    ])
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 15.0, right: 15.0, top: 15, bottom: 0),
+                //padding: EdgeInsets.symmetric(horizontal: 15),
+                child: TextFormField(
+
+                  obscureText: true,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Password',
+                      hintText: 'Enter secure password'),
+                  validator: validatePassword,
+
+                ),
+              ),
+              FlatButton(
+                onPressed: (){
+
+                },
+                child: Text(
+                  'New User? Sign up Here',
+                  style: TextStyle(color: Colors.blue, fontSize: 15),
+                ),
+              ),
+              Container(
+                height: 50,
+                width: 250,
+                decoration: BoxDecoration(
+                    color: const Color(4281608744), borderRadius: BorderRadius.circular(20)),
+                child: FlatButton(
+                  onPressed: () {
+                    if (formkey.currentState.validate()) {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => jokeApp()));
+                      print("Login Verified");
+                    } else {
+                      print("Not Verified :<");
+                    }
+                  },
+                  child: Text(
+                    'Login',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
                   ),
-                );
-         
-
-            else if(snapshot.connectionState == ConnectionState.waiting)
-              return Container(
-                height: MediaQuery.of(context).size.height,
-                child: Center(
-                  child: CircularProgressIndicator( )
                 ),
-              );
-            else return 
-            Container(
-                height: MediaQuery.of(context).size.height,
-                child: Center(
-                  child: Text('Unable To Connect'),
-                ),
-              );
-          }
-          
+              ),
+              SizedBox(
+                height: 130,
+              ),
+              Text('Forgot Password?')
+            ],
+          ),
         ),
-        ),
-
+      ),
     );
   }
 }
