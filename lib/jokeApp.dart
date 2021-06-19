@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as converter;
+import 'package:transparent_image/transparent_image.dart';
+
+import 'package:children/children.dart';
 
 class jokeApp extends StatefulWidget {
   @override
@@ -46,8 +49,29 @@ class _jokeAppState extends State<jokeApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: color,
-      appBar: PreferredSize(
-          child: JokeAppBar(), preferredSize: Size(double.maxFinite, 54)),
+      appBar: AppBar(
+        title: Text("JokesOnYou", style: TextStyle(color: Colors.black),),
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        actions: <Widget>[
+
+          PopupMenuButton<String>(
+            icon: Icon(
+              Icons.more_vert,
+              color: Colors.black,
+            ),
+            onSelected: handleClick,
+            itemBuilder: (BuildContext context) {
+              return {'Settings','Logout'}.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
+            },
+          ),
+        ]
+      ),
       body: SafeArea(
         child: FutureBuilder<dynamic>(
           future: getJokes(),
@@ -55,13 +79,21 @@ class _jokeAppState extends State<jokeApp> {
             if(snapshot.connectionState == ConnectionState.done)
               return Container(
                 height: MediaQuery.of(context).size.height,
-                child: Center(
-                  child: (snapshot.data != null)?GestureDetector(
-                    onTap: ()=> randomJoke(snapshot.data),
-                    child: Text(joke ?? '', style: TextStyle(color: Colors.white, fontSize: 50), textAlign: TextAlign.center,)
-                  )
-                  : Text('No Jokes At This Time',  style: TextStyle(color: Colors.white, fontSize: 50), textAlign:  TextAlign.center,)
-                  ),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      QuoteImage(),
+                      (snapshot.data != null)?GestureDetector(
+                      onTap: ()=> randomJoke(snapshot.data),
+                      child: Text(joke ?? '', style: TextStyle(color: Colors.white, fontSize: 30), textAlign: TextAlign.center,)
+                    )
+                    : Text('No Jokes At This Time',  style: TextStyle(color: Colors.white, fontSize: 30), textAlign:  TextAlign.center,),
+                      Text('Sound Check'),
+                      QuoteImage(
+                        isTopImage : false
+                      )
+
+                    ]),
                 );
          
 
@@ -86,39 +118,45 @@ class _jokeAppState extends State<jokeApp> {
 
     );
   }
+  void handleClick(String value) {
+    switch (value) {
+      case 'Logout':
+        break;
+      case 'Settings':
+        break;
+    }
+  }
 }
 
-class JokeAppBar extends StatelessWidget {
+class QuoteImage extends StatelessWidget {
+  final bool isTopImage;
+
+  const QuoteImage({Key key, this.isTopImage = true}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Platform.isAndroid
-              ? IconButton(
-              icon: Icon(
-                Icons.close,
-                color: Colors.grey,
+    return Opacity(
+      opacity: 0.5,
+      child: Padding(
+        padding: EdgeInsets.only(
+            top: isTopImage ? 0.0 : 10.0, bottom: isTopImage ? 10.0 : 0.0),
+        child: Align(
+          alignment: isTopImage ? Alignment.topLeft : Alignment.bottomRight,
+          child: SizedBox(
+            child: FadeInImage(
+              fadeInDuration: Duration(milliseconds: 300),
+              placeholder: MemoryImage(kTransparentImage),
+              fadeInCurve: Curves.easeInOut,
+              image: AssetImage(
+                isTopImage
+                    ? 'assets/images/left-quote.png'
+                    : 'assets/images/right-quote.png',
               ),
-              tooltip: 'Exit App',
-              onPressed: () {
-                SystemNavigator.pop();
-              })
-              : Container(),
-          Padding(
-            padding: const EdgeInsets.only(right: 20.0),
-            child: Text(
-              'Menu',
-              style: TextStyle(
-                  fontSize: 18.0,
-                  fontFamily: 'Sarabun',
-                  color: Colors.white),
             ),
-          )
-        ],
+            height: 80,
+          ),
+        ),
       ),
-      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
     );
   }
 }
