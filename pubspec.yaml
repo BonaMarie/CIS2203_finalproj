@@ -78,5 +78,15 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
+  fonts:
+    - family: League Spartan
+      fonts:
+        - asset: assets/fonts/LeagueSpartan-Bold.ttf
+    - family: Sarabun
+      fonts:
+        - asset: assets/fonts/Sarabun-Regular.ttf
+    - family: Roboto slab
+      fonts:
+        - asset: assets/fonts/RobotoSlab-Regular.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

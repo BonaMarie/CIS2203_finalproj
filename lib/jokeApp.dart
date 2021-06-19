@@ -85,9 +85,9 @@ class _jokeAppState extends State<jokeApp> {
                       QuoteImage(),
                       (snapshot.data != null)?GestureDetector(
                       onTap: ()=> randomJoke(snapshot.data),
-                      child: Text(joke ?? '', style: TextStyle(color: Colors.white, fontSize: 30), textAlign: TextAlign.center,)
+                      child: Text(joke ?? '', style: TextStyle(fontFamily: 'Roboto Slab',color: Colors.white, fontSize: 30), textAlign: TextAlign.center,)
                     )
-                    : Text('No Jokes At This Time',  style: TextStyle(color: Colors.white, fontSize: 30), textAlign:  TextAlign.center,),
+                    : Text('No Jokes At This Time',  style: TextStyle(fontFamily: 'Roboto Slab',color: Colors.white, fontSize: 30), textAlign:  TextAlign.center,),
                       Text('Sound Check'),
                       QuoteImage(
                         isTopImage : false
