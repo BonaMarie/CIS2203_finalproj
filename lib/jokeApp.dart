@@ -6,8 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as converter;
 import 'package:transparent_image/transparent_image.dart';
-
 import 'package:children/children.dart';
+import 'main.dart';
+import 'package:like_button/like_button.dart';
 
 class jokeApp extends StatefulWidget {
   @override
@@ -18,6 +19,8 @@ class _jokeAppState extends State<jokeApp> {
   String joke = 'Touch Screen!!';
   Color color = Colors.blueAccent;
   List<Color> colors = [Colors.redAccent, Colors.greenAccent, Colors.greenAccent, Colors.blueAccent, Colors.orangeAccent, Colors.deepOrange, Colors.deepPurple];
+
+  bool _isFavorite = false ;
 
   Future<dynamic> getJokes() async{
     var jokeUrl = 'https://official-joke-api.appspot.com/random_ten';
@@ -62,7 +65,7 @@ class _jokeAppState extends State<jokeApp> {
             ),
             onSelected: handleClick,
             itemBuilder: (BuildContext context) {
-              return {'Settings','Logout'}.map((String choice) {
+              return {'Logout'}.map((String choice) {
                 return PopupMenuItem<String>(
                   value: choice,
                   child: Text(choice),
@@ -88,11 +91,10 @@ class _jokeAppState extends State<jokeApp> {
                       child: Text(joke ?? '', style: TextStyle(fontFamily: 'Roboto Slab',color: Colors.white, fontSize: 30), textAlign: TextAlign.center,)
                     )
                     : Text('No Jokes At This Time',  style: TextStyle(fontFamily: 'Roboto Slab',color: Colors.white, fontSize: 30), textAlign:  TextAlign.center,),
-                      Text('Sound Check'),
                       QuoteImage(
                         isTopImage : false
-                      )
-
+                      ),
+                      Text('Tap for a New Joke!', style: TextStyle(color: Colors.grey))
                     ]),
                 );
          
@@ -115,12 +117,13 @@ class _jokeAppState extends State<jokeApp> {
           
         ),
         ),
-
     );
   }
   void handleClick(String value) {
     switch (value) {
       case 'Logout':
+          Navigator.push(context,
+            MaterialPageRoute(builder: (_) => LoginDemo()));
         break;
       case 'Settings':
         break;
@@ -133,6 +136,16 @@ class QuoteImage extends StatelessWidget {
 
   const QuoteImage({Key key, this.isTopImage = true}) : super(key: key);
 
+  Future<bool> onLikeButtonTapped(bool isLiked) async{
+    /// send your request here
+    // final bool success= await sendRequest();
+
+    /// if failed, you can do nothing
+    // return success? !isLiked:isLiked;
+
+    return !isLiked;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Opacity(
@@ -142,18 +155,22 @@ class QuoteImage extends StatelessWidget {
             top: isTopImage ? 0.0 : 10.0, bottom: isTopImage ? 10.0 : 0.0),
         child: Align(
           alignment: isTopImage ? Alignment.topLeft : Alignment.bottomRight,
-          child: SizedBox(
-            child: FadeInImage(
-              fadeInDuration: Duration(milliseconds: 300),
-              placeholder: MemoryImage(kTransparentImage),
-              fadeInCurve: Curves.easeInOut,
-              image: AssetImage(
-                isTopImage
-                    ? 'assets/images/left-quote.png'
-                    : 'assets/images/right-quote.png',
+          child: Column(
+            children: <Widget>[
+              FadeInImage(
+                fadeInDuration: Duration(milliseconds: 300),
+                placeholder: MemoryImage(kTransparentImage),
+                fadeInCurve: Curves.easeInOut,
+                image: AssetImage(
+                  isTopImage
+                      ? 'assets/images/left-quote.png'
+                      : 'assets/images/right-quote.png',
+                ),height: 80,
               ),
-            ),
-            height: 80,
+              (isTopImage)?LikeButton(
+                onTap: onLikeButtonTapped,
+              ): Text(''),
+            ],
           ),
         ),
       ),

@@ -40,8 +40,10 @@ class _LoginDemoState extends State<LoginDemo> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Bona's Login Page"),
-        backgroundColor: const Color(4281608744),
+        title: Text("Bona's Login Page", style: TextStyle(color: Colors.white),),
+        backgroundColor: Colors.white, //const Color(4281608744),
+        automaticallyImplyLeading: false,
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -103,7 +105,7 @@ class _LoginDemoState extends State<LoginDemo> {
                 width: 250,
                 decoration: BoxDecoration(
                     color: const Color(4281608744), borderRadius: BorderRadius.circular(20)),
-                child: FlatButton(
+                child: TextButton(
                   onPressed: () {
                     if (formkey.currentState.validate()) {
                       Navigator.push(context,
