@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as converter;
 
@@ -44,7 +46,8 @@ class _jokeAppState extends State<jokeApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: color,
-      appBar: null,
+      appBar: PreferredSize(
+          child: JokeAppBar(), preferredSize: Size(double.maxFinite, 54)),
       body: SafeArea(
         child: FutureBuilder<dynamic>(
           future: getJokes(),
@@ -81,6 +84,41 @@ class _jokeAppState extends State<jokeApp> {
         ),
         ),
 
+    );
+  }
+}
+
+class JokeAppBar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Platform.isAndroid
+              ? IconButton(
+              icon: Icon(
+                Icons.close,
+                color: Colors.grey,
+              ),
+              tooltip: 'Exit App',
+              onPressed: () {
+                SystemNavigator.pop();
+              })
+              : Container(),
+          Padding(
+            padding: const EdgeInsets.only(right: 20.0),
+            child: Text(
+              'Menu',
+              style: TextStyle(
+                  fontSize: 18.0,
+                  fontFamily: 'Sarabun',
+                  color: Colors.white),
+            ),
+          )
+        ],
+      ),
+      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
     );
   }
 }
