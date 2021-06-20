@@ -89,7 +89,7 @@ class _LoginDemoState extends State<LoginDemo> {
 
                 ),
               ),
-              FlatButton(
+              TextButton(
                 onPressed: (){
 
                 },
@@ -107,7 +107,7 @@ class _LoginDemoState extends State<LoginDemo> {
                   onPressed: () {
                     if (formkey.currentState.validate()) {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => jokeApp()));
+                          MaterialPageRoute(builder: (_) => JokeApp()));
                       print("Login Verified");
                     } else {
                       print("Not Verified :<");

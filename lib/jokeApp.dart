@@ -1,27 +1,21 @@
-import 'dart:io';
 import 'dart:math';
 
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as converter;
 import 'package:transparent_image/transparent_image.dart';
-import 'package:children/children.dart';
 import 'main.dart';
-import 'package:like_button/like_button.dart';
 
-class jokeApp extends StatefulWidget {
+class JokeApp extends StatefulWidget {
   @override
-  _jokeAppState createState() => _jokeAppState();
+  _JokeAppState createState() => _JokeAppState();
 }
 
-class _jokeAppState extends State<jokeApp> {
+class _JokeAppState extends State<JokeApp> {
   String joke = 'Tap to Tell a Joke!!';
   Color color = Colors.blueAccent;
   List<Color> colors = [Colors.redAccent, Colors.greenAccent, Colors.greenAccent, Colors.blueAccent, Colors.orangeAccent, Colors.deepOrange, Colors.deepPurple];
-
-  bool _isFavorite = false ;
 
   Future<dynamic> getJokes() async{
     var jokeUrl = 'https://official-joke-api.appspot.com/random_ten';
