@@ -51,15 +51,13 @@ class _LoginDemoState extends State<LoginDemo> {
           child: Column(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(top: 60.0),
+                padding: const EdgeInsets.only(top: 60.0,bottom:50),
                 child: Center(
                   child: Container(
-                      width: 200,
-                      height: 150,
-                      /*decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(50.0)),*/
-                      child: Image.asset('asset/images/logo.png')),
+                      width: 250,
+                      height: 250,
+
+                      child: Image.asset('assets/images/logo.png')),
                 ),
               ),
               Padding(
@@ -122,7 +120,7 @@ class _LoginDemoState extends State<LoginDemo> {
                 ),
               ),
               SizedBox(
-                height: 130,
+                height: 90,
               ),
               Text('Forgot Password?')
             ],

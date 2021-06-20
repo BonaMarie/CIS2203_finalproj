@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -16,7 +17,7 @@ class jokeApp extends StatefulWidget {
 }
 
 class _jokeAppState extends State<jokeApp> {
-  String joke = 'Touch Screen!!';
+  String joke = 'Tap to Tell a Joke!!';
   Color color = Colors.blueAccent;
   List<Color> colors = [Colors.redAccent, Colors.greenAccent, Colors.greenAccent, Colors.blueAccent, Colors.orangeAccent, Colors.deepOrange, Colors.deepPurple];
 
@@ -94,7 +95,7 @@ class _jokeAppState extends State<jokeApp> {
                       QuoteImage(
                         isTopImage : false
                       ),
-                      Text('Tap for a New Joke!', style: TextStyle(color: Colors.grey))
+                      Text('Tell a New Joke!', style: TextStyle(color: Colors.grey))
                     ]),
                 );
          
@@ -125,26 +126,15 @@ class _jokeAppState extends State<jokeApp> {
           Navigator.push(context,
             MaterialPageRoute(builder: (_) => LoginDemo()));
         break;
-      case 'Settings':
-        break;
     }
   }
 }
+
 
 class QuoteImage extends StatelessWidget {
   final bool isTopImage;
 
   const QuoteImage({Key key, this.isTopImage = true}) : super(key: key);
-
-  Future<bool> onLikeButtonTapped(bool isLiked) async{
-    /// send your request here
-    // final bool success= await sendRequest();
-
-    /// if failed, you can do nothing
-    // return success? !isLiked:isLiked;
-
-    return !isLiked;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -155,22 +145,18 @@ class QuoteImage extends StatelessWidget {
             top: isTopImage ? 0.0 : 10.0, bottom: isTopImage ? 10.0 : 0.0),
         child: Align(
           alignment: isTopImage ? Alignment.topLeft : Alignment.bottomRight,
-          child: Column(
-            children: <Widget>[
-              FadeInImage(
-                fadeInDuration: Duration(milliseconds: 300),
-                placeholder: MemoryImage(kTransparentImage),
-                fadeInCurve: Curves.easeInOut,
-                image: AssetImage(
-                  isTopImage
-                      ? 'assets/images/left-quote.png'
-                      : 'assets/images/right-quote.png',
-                ),height: 80,
+          child: SizedBox(
+            child: FadeInImage(
+              fadeInDuration: Duration(milliseconds: 300),
+              placeholder: MemoryImage(kTransparentImage),
+              fadeInCurve: Curves.easeInOut,
+              image: AssetImage(
+                isTopImage
+                    ? 'assets/images/left-quote.png'
+                    : 'assets/images/right-quote.png',
               ),
-              (isTopImage)?LikeButton(
-                onTap: onLikeButtonTapped,
-              ): Text(''),
-            ],
+            ),
+            height: 80,
           ),
         ),
       ),
